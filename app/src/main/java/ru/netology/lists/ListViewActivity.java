@@ -12,6 +12,7 @@ import android.widget.SimpleAdapter;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,17 +38,19 @@ public class ListViewActivity extends AppCompatActivity {
         saveTxt.putString(PARAM, text);
         saveTxt.apply();
 
-
+        final SwipeRefreshLayout swipeRefresh = findViewById(R.id.refresh);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ListView list = findViewById(R.id.list);
+        final ListView list = findViewById(R.id.list);
 
         final List<Map<String, String>> values = prepareContent();
 
         final BaseAdapter listContentAdapter = createAdapter(values);
 
         list.setAdapter(listContentAdapter);
+
+
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -57,14 +60,23 @@ public class ListViewActivity extends AppCompatActivity {
             }
         });
 
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                List<Map<String, String>> values = prepareContent();
 
+                BaseAdapter listContentAdapter = createAdapter(values);
+
+                list.setAdapter(listContentAdapter);
+                swipeRefresh.setRefreshing(false);
+            }
+        });
     }
 
     @NonNull
     private BaseAdapter createAdapter(List<Map<String, String>> values) {
         return new SimpleAdapter(this, values, R.layout.lay_out, new String[]{TITLE, NUM}, new int[]{R.id.textTop, R.id.textBottom});
     }
-
 
 
     @NonNull
@@ -79,8 +91,4 @@ public class ListViewActivity extends AppCompatActivity {
         }
         return result;
     }
-
-
-
-
 }
