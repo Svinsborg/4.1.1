@@ -4,20 +4,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class ListViewActivity extends AppCompatActivity {
 
@@ -25,7 +24,6 @@ public class ListViewActivity extends AppCompatActivity {
     private final static String NUM = "key_num";
     private static String PARAM = "text";
     private SharedPreferences memberSH;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +48,6 @@ public class ListViewActivity extends AppCompatActivity {
 
         list.setAdapter(listContentAdapter);
 
-
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -63,11 +59,9 @@ public class ListViewActivity extends AppCompatActivity {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                List<Map<String, String>> values = prepareContent();
-
-                BaseAdapter listContentAdapter = createAdapter(values);
-
-                list.setAdapter(listContentAdapter);
+                values.clear();
+                values.addAll(prepareContent());
+                listContentAdapter.notifyDataSetChanged();
                 swipeRefresh.setRefreshing(false);
             }
         });
